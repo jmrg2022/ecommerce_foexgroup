@@ -1,36 +1,36 @@
-## Introduction
+## Introducción
 
-This ecommerce was developed mostly in Django with PostgreSQL database and aims to
-cover all the basic functionalities of an e-commerce from login and user registration to the
-payment of the products.
+El presente proyecto de ecommerce implica la programación en lenguaje Python con Django
+y PostgreSQL para la empresa FoexGroup S.R.L. la cual se dedica a la comercialización de 
+herramientas para la construcción, plomería, jardinería y soldadura.
 
-Project images: https://helder-portfolio.herokuapp.com/ecommerce-1/
+Enlace GitHub: https://github.com/jmrg2022/ecommerce_foexgroup.git
 
+Cabe destacar que está en producción el presente proyecto en el dominio: www.foexgroupsrl.com.ar
 
-## Technologies
+## Tecnologías
 
-The implementation was carried out using Python version 3.7 with the following main libraries:
+La implementación está usando Python version 3.7 con las siguentes librerías:
 
  - django
- - mercadopago
  - pytest
  - coverage
 
-Other languages/technologies used:
+Otros lenguajes y tecnologías usadas:
 
  - Front-end: Javascript/HTML/CSS
  - Docker
 
-### Structure
+### Estructura
 
 ```shell
 .
-├── ecommerce                                                             # django project
+├── ecommerce                                                             # proyecto django
 │   ├── asgi.py
 │   ├── settings.py
 │   ├── urls.py
 │   └── wsgi.py
-├── main_app                                                              # main django application
+├── main_app                                                              # aplicación principal django
 │   ├── templatetags
 │   │   └── cart_template_tags.py
 │   ├── tests
@@ -46,114 +46,43 @@ Other languages/technologies used:
 │   ├── urls.py
 │   ├── utils.py
 │   └── views.py
-├── media_root                                                            # product image storage
-├── mercadopago_payment                                                   # django application for payments (mercadopago)
-│   ├── tests
-│   │   ├── factories.py
-│   │   ├── test_forms.py
-│   │   ├── test_models.py
-│   │   └── test_views.py
-│   ├── admin.py
-│   ├── apps.py
-│   ├── forms.py
-│   ├── middleware.py
-│   ├── models.py
-│   ├── urls.py
-│   ├── utils.py
-│   └── views.py
-├── postgres_data                                                         # database
-├── static                                                                # static file storage (css/js/...)
-├── templates                                                             # front-end storage (html)
-├── conftest.py                                                           # pytest fixture file
+├── media_root                                                            # imagenes de los productos 
+├── postgres_data                                                         # base de datos
+├── static                                                                # archivo estáticos (css/js/...)
+├── templates                                                             # front-end (html)
+├── conftest.py                                                           # archivo fixture pytest
 ├── docker-compose.yaml                                                   # docker-compose
 ├── docker_entrypoint.sh                                                  # docker Entrypoint
-├── Dockerfile                                                            # docker build file
-├── environment.env                                                       # environment variables
+├── Dockerfile                                                            # archivo docker build
+├── environment.env                                                       # variables de ambiente (environment)
 ├── manage.py
 ├── pytest.ini                                                            # pytest setup
 ├── README.md
-└── requirements.txt                                                      # libraries
+└── requirements.txt                                                      # librerías 
 ```
 
 
-## Running the project
+## Para correr el proyecto
 
-To run the project it is necessary to have `docker` and `docker-compose` installed in your environment. But first it is necessary to fill the environment.env file in the project root.
+Para correr el proyecto es necesario tener instalado `docker` and `docker-compose` . Siendo necesario acceder al archivo environment.env.
 
-```shell
-# Command to build and execute:
+
+# Comando para crear y ejecutar
 $ docker-compose up
 
-# Only build:
+# Solo crear:
 $ docker-compose build
 
-# Turn-off command:
+# Comando para parar:
+
 $ docker-compose down
-```
 
-From that point on, all containers will be available.
-To access the application, just open the address `http://localhost:8000` in your browser.
+A partir de haber realizado un docker-compose up, todos los contenedores estarán habilitados, para acceder a la aplicación, 
 
-### Handling the project
+abrir en cualquier navegador `http://localhost` (tiene modificado el puerto 8000 por el puerto 80)
 
-To add products to the store:
+Para crear un superusuario:
 
-1. Create a superuser:
-```shell
-# Create superuser (admin), run the command and fill username, email and password:
 $ docker exec -ti web createsuperuser
-```
 
-2. Open the browser and go to `localhost:8000/admin`, then login with the user created earlier.
-
-3. Once logged into the admin panel, go to Products and fill in the fields.
-
-### Configuring MercadoPago
-
- 1. Create a MercadoPago account: https://www.mercadopago.com.br/developers
- 2. Create test keys at: https://www.mercadopago.com.br/developers/panel/credentials
- 2. Copy keys and fill in the environment.env: `MERCADO_PAGO_PUBLIC_KEY` and `MERCADO_PAGO_ACCESS_TOKEN`
-
-NOTE: To put Mercadopago into production, activate the production credentials in the same link mentioned above and use the keys.
-
-
-## Development
-
-The structure contained in the `docker-compose.yaml` file provides separate containers for the Django project and the database (PostgreSQL).
-
-### Database
-
-All database-related changes must be made using Django's own ORM. To create a new migration just run `docker exec -ti web python manage.py makemigrations` and `docker exec -ti web python manage.py migrate`.
-The model diagram can be seen in the root directory of this project as `database_diagram.png`.
-
-Command to generate database diagram (it needs django-extensions and pygraphviz libs):
-```shell
-$ docker exec -ti web python manage.py graph_models main_app mercadopago_payment -g -o database_diagram.png
-```
-
-## Tests
-
-To run the tests, simply enter the following commands in your terminal:
-
-```shell
-# Run the tests with coverage to generate the coverage report:
-$ docker exec -ti web coverage run -m pytest -vx
-
-# Display the report and list the lines that are not covered by the tests:
-$ docker exec -ti web coverage report -i
-```
-
-To validate templates:
-```shell
-$ docker exec -ti web python manage.py validate_templates
-```
-
-This project currently contains 70% of test coverage.
-
-## Improvements that can be made
-
-- Add freight calculation and delivery time;
-- Add other payment methods:
-   https://www.mercadopago.com.br/developers/pt/docs/checkout-api/payment-methods/other-payment-methods
-- Save and get user credit-cards on MercadoPago;
-- Translate Front-end.
+Abrir un navegador e ir `localhost/admin`, para loguearse con el usuario antes creado.
