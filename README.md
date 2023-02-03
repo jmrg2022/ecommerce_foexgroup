@@ -86,3 +86,7 @@ Para crear un superusuario:
 $ docker exec -ti web createsuperuser
 
 Abrir un navegador e ir `localhost/admin`, para loguearse con el usuario antes creado.
+
+# Contacto: 
+
+Mail: ingjesusgonzalez@yahoo.com.ar
