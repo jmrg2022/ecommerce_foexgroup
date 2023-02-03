@@ -1,0 +1,53 @@
+version: "3.9"
+# command to access container already running:
+# - docker exec -ti dc3d5f0716c2 bash
+# - command on gitbash: winpty docker exec -ti dc3d5f0716c2 bash
+services:
+    web:
+        image: ecommerce_proj
+        container_name: web
+        build: .
+        command: python manage.py runserver 0.0.0.0:8000
+        #command: >
+        #    sh -c "exec gunicorn django_project.wsgi:application -b :8000 --reload"
+        volumes:
+            - .:/code
+        ports:
+            - "80:8000"
+        env_file:
+            - environment.env
+        entrypoint: ./docker-entrypoint.sh
+        depends_on:
+            db:
+                condition: service_healthy
+    db:
+        image: postgres:14.1-alpine
+        container_name: db
+        volumes:
+            - ./postgres_data:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        environment:
+            - POSTGRES_DB=foexgroup_db
+            - POSTGRES_USER=foexgroup
+            - POSTGRES_PASSWORD=1234Foex!
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready --username=postgres"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+    adminer:
+        # Una interfaz para monitoreo y gestión de nuestra base de datos.
+        # Se puede acceder a ella en localhost:8080
+        container_name: foex_adminer
+        image: adminer:4.8.0
+        restart: always
+        ports:
+
+        - 8080:8080
+        # depends_on indica que este servicio depende de que primero inicie "db"
+        depends_on: ["db"]
+
+volumes:
+    myecommerce:
+    postgres_data:

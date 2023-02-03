@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load cart_template_tags %}
+
+{% block content %}
+  <!--Main layout-->
+  <main class="mt-1">
+    <div class="container wow fadeIn">
+
+      <!-- Heading -->
+      <h2 class="my-5 h2 text-center">Su Cuenta</h2>
+
+      {% include 'profile-menu.html' %}
+
+      <div id="user_orders" class="col-md-8" style="padding-bottom: 150px;">
+        <!--Card-->
+        {% if user_orders %}
+          {% for user_order in user_orders reversed %}
+              <hr>
+              <div class="card container" style="cursor: pointer;" onclick="if (document.getElementById('order_info{{forloop.counter}}').style.display == 'none') {document.getElementById('order_info{{forloop.counter}}').style.display = 'block';} else {document.getElementById('order_info{{forloop.counter}}').style.display = 'none'}">
+                <div class="card-body">
+                  <div class="card-text float-right">Haga click para ampliar</div>
+                  {{ forloop.counter}}
+                  <div class="card-title">Código de Pedido: <b>{{ user_order.ref_code }}</b></div>
+
+                  <div class="card-text">Productos:</div>
+                  {% for item in user_order.items.all %}
+                    <div class="card-text ml-3">- {{ item|truncatewords_html:7 }}</div>
+                  {% endfor %}
+
+                  {% if user_order.finished_date %}
+                    <div class="card-text float-right">Finalizado el: {{ user_order.finished_date }}</div>
+                  {% else %}
+                    <div class="card-text float-right">Finalizado el: No finalizado</div>
+                  {% endif %}
+
+                  <div class="card-text float-right" style="clear: both;"><b>Estado</b>:
+                    {% if user_order.on_the_road and not user_order.delivered %}
+                      En Camino.
+                    {% elif user_order.delivered %}
+                      Pedido entregado.
+                    {% elif user_order.paid %}
+                      Pedido en preparación.
+                    {% else %}
+                      Esperando pago.
+                    {% endif %}
+                  </div>
+
+
+                  <div id="order_info{{forloop.counter}}" style="display: none;">
+                    <div class="card-text">Datos de inicio: {{ user_order.start_date }}</div>
+
+                    <div class="card-text">Dirección de Entrega:</div>
+                      <div class="card-text ml-3">- {{ user_order.billing_address.address }}, {{ user_order.billing_address.number }} - {{ user_order.billing_address.zipcode }}</div>
+                      <div class="card-text ml-3">- {{ user_order.billing_address.city }}, {{ user_order.billing_address.state }}</div>
+
+                    <div class="card-text">Valor total: <b>{{ user_order.get_total|currency_format }}</b></div>
+                    <!--
+                    <div class="card-text">Forma de Pago:                    
+                      {% if user_order.payment.mercado_pago_id %}
+                      <div class="card-text ml-3">- Tarjeta: {{ user_order.payment.payment_method_id }} - Cantidades: {{ user_order.payment.installments }} - Estado: {{ user_order.payment.mercado_pago_status }}</div>
+                      </div>
+                    {% else %}
+                        No efectuado.</div>
+                    {% endif %}
+
+                    {% if user_order.coupon %}
+                      <div class="card-text">CUPON utilizado: {{ user_order.coupon }}</div>
+                    {% endif %}
+
+                    {% if user_order.refund_requested %}
+                      <div class="card-text">Pedido de Devolución: Si</div>
+                    {% elif not user_order.refund_requested %}
+                      <div class="card-text">Pedido de Devolución: No</div>
+                    {% endif %}
+                    {% if user_order.payment.mercado_pago_id %}
+                      <a class="float-right btn btn-dark btn-sm" href="{% url 'refund-request' user_order.ref_code %}">Pedir Devolución</a>
+                    {% endif %}
+                    -->
+                  </div>
+                  
+                </div>
+              </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+    </div>
+  </main>
+  <!--Main layout-->
+{% endblock %}
