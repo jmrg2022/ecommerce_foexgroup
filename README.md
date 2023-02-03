@@ -89,4 +89,4 @@ Abrir un navegador e ir `localhost/admin`, para loguearse con el usuario antes c
 
 # Contacto: 
 
-Mail: ingjesusgonzalez@yahoo.com.ar
+Mails: ingjesusgonzalez@yahoo.com.ar - ingjesusmrgonzalez@gmail.com
